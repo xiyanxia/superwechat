@@ -39,7 +39,7 @@ import com.hyphenate.util.EMLog;
 
 import java.util.UUID;
 
-import cn.ucai.superwechat.DemoHelper;
+import cn.ucai.superwechat.SuperWeChatHelper;
 import cn.ucai.superwechat.R;
 
 /**
@@ -73,7 +73,7 @@ public class VoiceCallActivity extends CallActivity implements OnClickListener {
         }
 		setContentView(R.layout.em_activity_voice_call);
 		
-		DemoHelper.getInstance().isVoiceCalling = true;
+		SuperWeChatHelper.getInstance().isVoiceCalling = true;
 		callType = 0;
 
 		comingBtnContainer = (LinearLayout) findViewById(R.id.ll_coming_call);
@@ -367,7 +367,7 @@ public class VoiceCallActivity extends CallActivity implements OnClickListener {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        DemoHelper.getInstance().isVoiceCalling = false;
+        SuperWeChatHelper.getInstance().isVoiceCalling = false;
     }
 
 	@Override
