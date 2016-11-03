@@ -142,7 +142,7 @@ public class LoginActivity extends BaseActivity {
         }
 
         progressShow = true;
-        pd = new ProgressDialog(LoginActivity.this);
+        pd = new ProgressDialog(mContext);
         pd.setCanceledOnTouchOutside(false);
         pd.setOnCancelListener(new OnCancelListener() {
 
@@ -219,6 +219,8 @@ public class LoginActivity extends BaseActivity {
                         pd.dismiss();
                         L.e(TAG, "login fail," + result);
                     }
+                } else {
+                    pd.dismiss();
                 }
             }
 
@@ -277,5 +279,11 @@ public class LoginActivity extends BaseActivity {
                 MFGT.gotoRegister(this);
                 break;
         }
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        pd.dismiss();
     }
 }
