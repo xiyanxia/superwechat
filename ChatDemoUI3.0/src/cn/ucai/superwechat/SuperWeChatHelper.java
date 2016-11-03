@@ -219,9 +219,14 @@ public class SuperWeChatHelper {
             public EaseUser getUser(String username) {
                 return getUserInfo(username);
             }
+
+            @Override
+            public User getAppUser(String username) {
+                return null;
+            }
         });
 
-        //set options 
+        //set options
         easeUI.setSettingsProvider(new EaseSettingsProvider() {
 
             @Override
@@ -1259,5 +1264,4 @@ public class SuperWeChatHelper {
     public void setCurrentUser(User currentUser) {
         this.currentUser = currentUser;
     }
-
 }
