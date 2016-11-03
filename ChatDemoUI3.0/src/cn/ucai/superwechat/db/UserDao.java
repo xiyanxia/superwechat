@@ -71,6 +71,7 @@ public class UserDao {
 
     /**
      * delete a contact
+     *
      * @param username
      */
     public void deleteContact(String username) {
@@ -79,6 +80,7 @@ public class UserDao {
 
     /**
      * save a contact
+     *
      * @param user
      */
     public void saveContact(EaseUser user) {
@@ -109,8 +111,8 @@ public class UserDao {
         SuperWeChatDBManager.getInstance().saveRobotList(robotList);
     }
 
-    public boolean saveUser(User user){
-        		return SuperWeChatDBManager.getInstance().saveUser(user);
+    public boolean saveUser(User user) {
+        return SuperWeChatDBManager.getInstance().saveUser(user);
     }
 
     public User getUser(String username) {
@@ -119,5 +121,19 @@ public class UserDao {
 
     public boolean updateUser(User user) {
         return SuperWeChatDBManager.getInstance().updateUser(user);
+    }
+
+    public void saveAppContact(User user) {
+        SuperWeChatDBManager.getInstance().saveAppContact(user);
+    }
+
+
+    public Map<String, User> getAppContactList() {
+
+        return SuperWeChatDBManager.getInstance().getAppContactList();
+    }
+
+    public void saveAppContactList(List<User> contactList) {
+        SuperWeChatDBManager.getInstance().saveAppContactList(contactList);
     }
 }
