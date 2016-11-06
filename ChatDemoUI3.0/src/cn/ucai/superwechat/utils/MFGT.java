@@ -47,6 +47,9 @@ public class MFGT {
         startActivity(context, SettingsActivity.class);
     }
 
+    public static void gotoUserProfile(Activity context) {
+        startActivity(context, UserProfileActivity.class);
+    }
 
 }
 
