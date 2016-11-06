@@ -24,10 +24,15 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.PowerManager;
+import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.v4.content.LocalBroadcastManager;
+import android.support.v4.view.ViewPager;
+import android.support.v7.app.AlertDialog;
 import android.view.KeyEvent;
 import android.view.View;
+import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.easemob.redpacketui.RedPacketConstant;
@@ -47,22 +52,47 @@ import com.umeng.update.UmengUpdateAgent;
 
 import java.util.List;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
 import cn.ucai.superwechat.Constant;
 import cn.ucai.superwechat.R;
 import cn.ucai.superwechat.SuperWeChatHelper;
+import cn.ucai.superwechat.adapter.MainTabAdpter;
 import cn.ucai.superwechat.db.InviteMessgeDao;
 import cn.ucai.superwechat.db.UserDao;
 import cn.ucai.superwechat.runtimepermissions.PermissionsManager;
 import cn.ucai.superwechat.runtimepermissions.PermissionsResultAction;
+import cn.ucai.superwechat.widget.DMTabHost;
+import cn.ucai.superwechat.widget.MFViewPager;
 
 @SuppressLint("NewApi")
-public class MainActivity extends BaseActivity {
-    protected static final String TAG = "MainActivity";
+public class MainActivity extends BaseActivity implements DMTabHost.OnCheckedChangeListener, ViewPager.OnPageChangeListener {
 
-    // user logged into another device
+    protected static final String TAG = "MainActivity";
+    //	// textview for unread message count
+//	private TextView unreadLabel;
+//	// textview for unread event message
+//	private TextView unreadAddressLable;
+//
+//	private Button[] mTabs;
+//	private ContactListFragment contactListFragment;
+//	private Fragment[] fragments;
+//	private int index;
+//	private int currentTabIndex;
+// user logged into another device
     public boolean isConflict = false;
+    @BindView(R.id.txt_left)
+    TextView mTxtLeft;
+    @BindView(R.id.img_right)
+    ImageView mImgRight;
+    @BindView(R.id.layout_viewpage)
+    MFViewPager mLayoutViewpage;
+    @BindView(R.id.layout_tabhost)
+    DMTabHost mLayoutTabhost;
     // user account was removed
     private boolean isCurrentAccountRemoved = false;
+
+    MainTabAdpter adapter;
 
 
     /**
@@ -75,20 +105,30 @@ public class MainActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         savePower();
         checkLogined(savedInstanceState);
+
         setContentView(R.layout.em_activity_main);
+        ButterKnife.bind(this);
         // runtime permission for android 6.0, just require all permissions here for simple
         requestPermissions();
-
         initView();
         umeng();
-        //umeng api
+
         checkAccount();
 
 
         inviteMessgeDao = new InviteMessgeDao(this);
         UserDao userDao = new UserDao(this);
+        //		conversationListFragment = new ConversationListFragment();
+        //		contactListFragment = new ContactListFragment();
+        //		SettingsFragment settingFragment = new SettingsFragment();
+        //		fragments = new Fragment[] { conversationListFragment, contactListFragment, settingFragment};
+        //
+        //		getSupportFragmentManager().beginTransaction().add(R.id.fragment_container, conversationListFragment)
+        //				.add(R.id.fragment_container, contactListFragment).hide(contactListFragment).show(conversationListFragment)
+        //				.commit();
 
         //register broadcast receiver to receive the change of group from DemoHelper
         registerBroadcastReceiver();
@@ -134,7 +174,7 @@ public class MainActivity extends BaseActivity {
             PowerManager pm = (PowerManager) getSystemService(Context.POWER_SERVICE);
             if (!pm.isIgnoringBatteryOptimizations(packageName)) {
                 Intent intent = new Intent();
-                intent.setAction(android.provider.Settings.ACTION_REQUEST_IGNORE_BATTERY_OPTIMIZATIONS);
+                intent.setAction(Settings.ACTION_REQUEST_IGNORE_BATTERY_OPTIMIZATIONS);
                 intent.setData(Uri.parse("package:" + packageName));
                 startActivity(intent);
             }
@@ -146,7 +186,7 @@ public class MainActivity extends BaseActivity {
         PermissionsManager.getInstance().requestAllManifestPermissionsIfNecessary(this, new PermissionsResultAction() {
             @Override
             public void onGranted() {
-//				Toast.makeText(MainActivity.this, "All permissions have been granted", Toast.LENGTH_SHORT).show();
+                //				Toast.makeText(MainActivity.this, "All permissions have been granted", Toast.LENGTH_SHORT).show();
             }
 
             @Override
@@ -160,7 +200,29 @@ public class MainActivity extends BaseActivity {
      * init views
      */
     private void initView() {
-
+        //		unreadLabel = (TextView) findViewById(R.id.unread_msg_number);
+        //		unreadAddressLable = (TextView) findViewById(R.id.unread_address_number);
+        //		mTabs = new Button[3];
+        //		mTabs[0] = (Button) findViewById(R.id.btn_conversation);
+        //		mTabs[1] = (Button) findViewById(R.id.btn_address_list);
+        //		mTabs[2] = (Button) findViewById(R.id.btn_setting);
+        //		// select first tab
+        //		mTabs[0].setSelected(true);
+        mTxtLeft.setVisibility(View.VISIBLE);
+        mImgRight.setVisibility(View.VISIBLE);
+        adapter = new MainTabAdpter(getSupportFragmentManager());
+        adapter.clear();
+        mLayoutViewpage.setAdapter(adapter);
+        mLayoutViewpage.setOffscreenPageLimit(4);
+        adapter.addFragment(new ConversationListFragment(), getString(R.string.app_name));
+        adapter.addFragment(new ContactListFragment(), getString(R.string.contacts));
+        adapter.addFragment(new DiscoverFragment(), getString(R.string.discover));
+        -adapter.addFragment(new SettingsFragment(), getString(R.string.me));
+        +adapter.addFragment(new ProfileFragment(), getString(R.string.me));
+        adapter.notifyDataSetChanged();
+        mLayoutTabhost.setChecked(0);
+        mLayoutTabhost.setOnCheckedChangeListener(this);
+        mLayoutViewpage.setOnPageChangeListener(this);
     }
 
 
@@ -207,6 +269,12 @@ public class MainActivity extends BaseActivity {
             public void run() {
                 // refresh unread count
                 updateUnreadLabel();
+                //				if (currentTabIndex == 0) {
+                //					// refresh conversation list
+                //					if (conversationListFragment != null) {
+                //						conversationListFragment.refresh();
+                //					}
+                //				}
             }
         });
     }
@@ -228,6 +296,16 @@ public class MainActivity extends BaseActivity {
             public void onReceive(Context context, Intent intent) {
                 updateUnreadLabel();
                 updateUnreadAddressLable();
+                //                if (currentTabIndex == 0) {
+                //                    // refresh conversation list
+                //                    if (conversationListFragment != null) {
+                //                        conversationListFragment.refresh();
+                //                    }
+                //                } else if (currentTabIndex == 1) {
+                //                    if(contactListFragment != null) {
+                //                        contactListFragment.refresh();
+                //                    }
+                //                }
                 String action = intent.getAction();
                 if (action.equals(Constant.ACTION_GROUP_CHANAGED)) {
                     if (EaseCommonUtils.getTopActivity(MainActivity.this).equals(GroupsActivity.class.getName())) {
@@ -244,6 +322,27 @@ public class MainActivity extends BaseActivity {
             }
         };
         broadcastManager.registerReceiver(broadcastReceiver, intentFilter);
+    }
+
+    @Override
+    public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+    }
+
+    @Override
+    public void onPageSelected(int position) {
+        mLayoutTabhost.setChecked(position);
+        mLayoutViewpage.setCurrentItem(position);
+    }
+
+    @Override
+    public void onPageScrollStateChanged(int state) {
+
+    }
+
+    @Override
+    public void onCheckedChange(int checkedPosition, boolean byUser) {
+        mLayoutViewpage.setCurrentItem(checkedPosition, false);
     }
 
     public class MyContactListener implements EMContactListener {
@@ -277,6 +376,7 @@ public class MainActivity extends BaseActivity {
         @Override
         public void onContactRefused(String username) {
         }
+
     }
 
     private void unregisterBroadcastReceiver() {
@@ -305,7 +405,12 @@ public class MainActivity extends BaseActivity {
      */
     public void updateUnreadLabel() {
         int count = getUnreadMsgCountTotal();
-
+        //		if (count > 0) {
+        //			unreadLabel.setText(String.valueOf(count));
+        //			unreadLabel.setVisibility(View.VISIBLE);
+        //		} else {
+        //			unreadLabel.setVisibility(View.INVISIBLE);
+        //		}
     }
 
     /**
@@ -315,7 +420,11 @@ public class MainActivity extends BaseActivity {
         runOnUiThread(new Runnable() {
             public void run() {
                 int count = getUnreadAddressCountTotal();
-
+                //				if (count > 0) {
+                //					unreadAddressLable.setVisibility(View.VISIBLE);
+                //				} else {
+                //					unreadAddressLable.setVisibility(View.INVISIBLE);
+                //				}
             }
         });
 
@@ -392,8 +501,8 @@ public class MainActivity extends BaseActivity {
         return super.onKeyDown(keyCode, event);
     }
 
-    private android.app.AlertDialog.Builder conflictBuilder;
-    private android.app.AlertDialog.Builder accountRemovedBuilder;
+    private AlertDialog.Builder conflictBuilder;
+    private AlertDialog.Builder accountRemovedBuilder;
     private boolean isConflictDialogShow;
     private boolean isAccountRemovedDialogShow;
     private BroadcastReceiver internalDebugReceiver;
@@ -412,7 +521,7 @@ public class MainActivity extends BaseActivity {
             // clear up global variables
             try {
                 if (conflictBuilder == null)
-                    conflictBuilder = new android.app.AlertDialog.Builder(MainActivity.this);
+                    conflictBuilder = new AlertDialog.Builder(MainActivity.this);
                 conflictBuilder.setTitle(st);
                 conflictBuilder.setMessage(R.string.connect_conflict);
                 conflictBuilder.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
@@ -449,7 +558,7 @@ public class MainActivity extends BaseActivity {
             // clear up global variables
             try {
                 if (accountRemovedBuilder == null)
-                    accountRemovedBuilder = new android.app.AlertDialog.Builder(MainActivity.this);
+                    accountRemovedBuilder = new AlertDialog.Builder(MainActivity.this);
                 accountRemovedBuilder.setTitle(st5);
                 accountRemovedBuilder.setMessage(R.string.em_user_remove);
                 accountRemovedBuilder.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
