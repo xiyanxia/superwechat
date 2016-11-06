@@ -43,9 +43,9 @@ public class ProfileFragment extends Fragment {
     }
 
     private void setUserInfo() {
-        EaseUserUtils.setCuentAppUserAvatar(getActivity(),mIvProfileAvatar);
-        EaseUserUtils.setCuentAppUserNick(mTvProfileNickname);
-        EaseUserUtils.setCuentAppUserNameWithNo(mTvProfileUsername);
+        EaseUserUtils.setCurentAppUserAvatar(getActivity(),mIvProfileAvatar);
+        EaseUserUtils.setCurentAppUserNick(mTvProfileNickname);
+        EaseUserUtils.setCurrentAppUserNameWithNo(mTvProfileUsername);
     }
     @OnClick({R.id.layout_profile_view, R.id.tv_profile_money, R.id.tv_profile_setting})
     public void onClick(View view) {
@@ -58,7 +58,7 @@ public class ProfileFragment extends Fragment {
                 RedPacketUtil.startChangeActivity(getActivity());
                 break;
             case R.id.tv_profile_setting:
-                MFGT.gotoSetting(getActivity());
+                MFGT.gotoSettings(getActivity());
                 break;
         }
     }
