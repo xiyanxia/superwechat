@@ -270,7 +270,10 @@
             android:screenOrientation="portrait"
             android:theme="@style/horizontal_slide" />
 
-        <!-- 红包相关Activity start -->
+        <activity
+             android:name=".ui.SettingsActivity"
+             android:screenOrientation="portrait"
+            android:theme="@style/horizontal_slide"/>
         <!-- 发红包 -->
         <activity
             android:name="com.easemob.redpacketui.ui.activity.RPRedPacketActivity"
