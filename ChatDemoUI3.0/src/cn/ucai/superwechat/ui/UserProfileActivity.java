@@ -34,6 +34,8 @@ public class UserProfileActivity extends BaseActivity implements OnClickListener
 
     private static final int REQUESTCODE_PICK = 1;
     private static final int REQUESTCODE_CUTTING = 2;
+
+
     private ImageView headAvatar;
     private ImageView headPhotoUpdate;
     private ImageView iconRightArrow;
