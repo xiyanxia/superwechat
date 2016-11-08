@@ -18,8 +18,9 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
-import android.view.ViewGroup;
+import android.view.View.OnClickListener;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -34,6 +35,7 @@ import com.hyphenate.util.EMLog;
 import cn.ucai.superwechat.R;
 import cn.ucai.superwechat.SuperWeChatHelper;
 import cn.ucai.superwechat.SuperWeChatModel;
+import cn.ucai.superwechat.utils.MFGT;
 
 /**
  * settings screen
@@ -66,7 +68,6 @@ public class SettingsActivity extends BaseActivity implements OnClickListener {
 
     private LinearLayout blacklistContainer;
 
-    private LinearLayout userProfileContainer;
 
     /**
      * logout
@@ -104,7 +105,7 @@ public class SettingsActivity extends BaseActivity implements OnClickListener {
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedIntstanceState);
+        super.onCreate(savedInstanceState);
         setContentView(R.layout.em_fragment_conversation_settings);
         if (savedInstanceState != null && savedInstanceState.getBoolean("isConflict", false))
             return;
@@ -136,13 +137,12 @@ public class SettingsActivity extends BaseActivity implements OnClickListener {
         if (!TextUtils.isEmpty(EMClient.getInstance().getCurrentUser())) {
             logoutBtn.setText(getString(R.string.button_logout) + "(" + EMClient.getInstance().getCurrentUser() + ")");
         }
-        customServerSwitch = (EaseSwitchButton) getView().findViewById(R.id.switch_custom_server);
+        customServerSwitch = (EaseSwitchButton) findViewById(R.id.switch_custom_server);
 
         textview1 = (TextView) findViewById(R.id.textview1);
         textview2 = (TextView) findViewById(R.id.textview2);
 
         blacklistContainer = (LinearLayout) findViewById(R.id.ll_black_list);
-        userProfileContainer = (LinearLayout) findViewById(R.id.ll_user_profile);
         llDiagnose = (LinearLayout) findViewById(R.id.ll_diagnose);
         pushNick = (LinearLayout) findViewById(R.id.ll_set_push_nick);
 
@@ -150,7 +150,6 @@ public class SettingsActivity extends BaseActivity implements OnClickListener {
         chatOptions = EMClient.getInstance().getOptions();
 
         blacklistContainer.setOnClickListener(this);
-        userProfileContainer.setOnClickListener(this);
         rl_switch_notification.setOnClickListener(this);
         rl_switch_sound.setOnClickListener(this);
         rl_switch_vibrate.setOnClickListener(this);
@@ -332,12 +331,9 @@ public class SettingsActivity extends BaseActivity implements OnClickListener {
                 startActivity(new Intent(this, DiagnoseActivity.class));
                 break;
             case R.id.ll_set_push_nick:
-                startActivity(new Intent(getActivity(), OfflinePushNickActivity.class));
+                startActivity(new Intent(this, OfflinePushNickActivity.class));
                 break;
-            case R.id.ll_user_profile:
-                startActivity(new Intent(this, UserProfileActivity.class).putExtra("setting", true)
-                        .putExtra("username", EMClient.getInstance().getCurrentUser()));
-                break;
+
             case R.id.switch_custom_server:
                 if (customServerSwitch.isSwitchOpen()) {
                     customServerSwitch.closeSwitch();
@@ -360,13 +356,12 @@ public class SettingsActivity extends BaseActivity implements OnClickListener {
     }
 
     void logout() {
-        final ProgressDialog pd = new ProgressDialog(getActivity());
+        final ProgressDialog pd = new ProgressDialog(this);
         String st = getResources().getString(R.string.Are_logged_out);
         pd.setMessage(st);
         pd.setCanceledOnTouchOutside(false);
         pd.show();
-        SuperWeChatHelper.getInstance().logout(false, new EMCallBack() {
-
+        SuperWeChatHelper.getInstance().logout(false,new EMCallBack() {
             @Override
             public void onSuccess() {
                 runOnUiThread(new Runnable() {
