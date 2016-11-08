@@ -105,7 +105,7 @@ public class NewFriendsMsgAdapter extends ArrayAdapter<InviteMessage> {
                         Result result = ResultUtils.getResultFromJson(s, User.class);
                         if (result != null && result.isRetMsg()) {
                             User u = (User) result.getRetData();
-                            EaseUserUtils.setAppUserAvatar(context, msg.getFrom(), holder.avator);
+                            EaseUserUtils.setAppUserPathAvatar(context,u.getAvatar(),holder.avator);
                             EaseUserUtils.setAppUserNick(u.getMUserNick(), holder.name);
                         }
                     }
@@ -165,20 +165,24 @@ public class NewFriendsMsgAdapter extends ArrayAdapter<InviteMessage> {
                     }
                 });
             } else if (msg.getStatus() == InviteMesageStatus.AGREED) {
+                holder.status.setVisibility(View.VISIBLE);
                 holder.status.setText(str5);
                 holder.status.setBackgroundDrawable(null);
                 holder.status.setEnabled(false);
             } else if (msg.getStatus() == InviteMesageStatus.REFUSED) {
+                holder.status.setVisibility(View.VISIBLE);
                 holder.status.setText(str6);
                 holder.status.setBackgroundDrawable(null);
                 holder.status.setEnabled(false);
             } else if (msg.getStatus() == InviteMesageStatus.GROUPINVITATION_ACCEPTED) {
                 String str = msg.getGroupInviter() + str9 + msg.getGroupName();
+                holder.status.setVisibility(View.VISIBLE);
                 holder.status.setText(str);
                 holder.status.setBackgroundDrawable(null);
                 holder.status.setEnabled(false);
             } else if (msg.getStatus() == InviteMesageStatus.GROUPINVITATION_DECLINED) {
                 String str = msg.getGroupInviter() + str10 + msg.getGroupName();
+                holder.status.setVisibility(View.VISIBLE);
                 holder.status.setText(str);
                 holder.status.setBackgroundDrawable(null);
                 holder.status.setEnabled(false);
