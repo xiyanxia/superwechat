@@ -1,5 +1,10 @@
 package cn.ucai.superwechat.utils;
 
+import android.app.Activity;
+
+import java.util.LinkedList;
+import java.util.List;
+
 /**
  * Created by 涛 on 2016/11/6.
  */
