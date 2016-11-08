@@ -52,8 +52,8 @@
         android:name="cn.ucai.superwechat.SuperWeChatApplication"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
-        android:theme="@style/AppTheme"
-        android:label="@string/app_name">
+        android:label="@string/app_name"
+        android:theme="@style/AppTheme">
         <activity
             android:name="cn.ucai.superwechat.ui.MainActivity"
             android:launchMode="singleTask"
@@ -96,6 +96,16 @@
         <!-- 添加好友 -->
         <activity
             android:name="cn.ucai.superwechat.ui.AddContactActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/horizontal_slide"
+            android:windowSoftInputMode="stateVisible" />
+        <activity
+            android:name=".ui.AddFriendActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/horizontal_slide"
+            android:windowSoftInputMode="stateVisible" />
+        <activity
+            android:name=".ui.FriendProfileActivity"
             android:screenOrientation="portrait"
             android:theme="@style/horizontal_slide"
             android:windowSoftInputMode="stateVisible" />
@@ -271,9 +281,9 @@
             android:theme="@style/horizontal_slide" />
 
         <activity
-             android:name=".ui.SettingsActivity"
-             android:screenOrientation="portrait"
-            android:theme="@style/horizontal_slide"/>
+            android:name=".ui.SettingsActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/horizontal_slide" />
         <!-- 发红包 -->
         <activity
             android:name="com.easemob.redpacketui.ui.activity.RPRedPacketActivity"

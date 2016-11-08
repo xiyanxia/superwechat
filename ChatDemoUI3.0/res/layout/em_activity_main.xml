@@ -8,14 +8,14 @@
     android:background="@color/common_bg">
 
     <include
-        android:id="@+id/layout_title"
+        android:id="@+id/layout_tabhost"
         layout="@layout/view_layout_title" />
 
     <cn.ucai.superwechat.widget.MFViewPager
         android:id="@+id/layout_viewpage"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@id/layout_title"></cn.ucai.superwechat.widget.MFViewPager>
+        android:layout_below="@id/layout_tabhost"></cn.ucai.superwechat.widget.MFViewPager>
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -37,7 +37,9 @@
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 app:drawableTop="@drawable/tab_weixin"
-                app:tabtext="@string/app_name"></cn.ucai.superwechat.widget.DMTabButton>
+                app:tabtext="@string/app_name">
+
+            </cn.ucai.superwechat.widget.DMTabButton>
 
             <cn.ucai.superwechat.widget.DMTabButton
                 android:layout_width="match_parent"

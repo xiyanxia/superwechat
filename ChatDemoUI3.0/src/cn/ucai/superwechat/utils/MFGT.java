@@ -4,8 +4,12 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 
+import com.hyphenate.easeui.domain.User;
+
+import cn.ucai.superwechat.I;
 import cn.ucai.superwechat.R;
 import cn.ucai.superwechat.ui.AddContactActivity;
+import cn.ucai.superwechat.ui.FriendProfileActivity;
 import cn.ucai.superwechat.ui.LoginActivity;
 import cn.ucai.superwechat.ui.RegisterActivity;
 import cn.ucai.superwechat.ui.SettingsActivity;
@@ -17,45 +21,53 @@ import cn.ucai.superwechat.ui.UserProfileActivity;
  * 辅助跳转
  */
 public class MFGT {
-    public static void finish(Activity activity){
+    public static void finish(Activity activity) {
         activity.finish();
-        activity.overridePendingTransition(R.anim.push_right_in,R.anim.push_right_out);
+        activity.overridePendingTransition(R.anim.push_right_in, R.anim.push_right_out);
     }
 
-    public static void startActivity(Activity context,Class<?> cls){
+    public static void startActivity(Activity context, Class<?> cls) {
         Intent intent = new Intent();
-        intent.setClass(context,cls);
-        startActivity(context,intent);
+        intent.setClass(context, cls);
+        startActivity(context, intent);
     }
 
-    public static void startActivity(Context context,Intent intent){
+    public static void startActivity(Context context, Intent intent) {
         context.startActivity(intent);
-        ((Activity)context).overridePendingTransition(R.anim.push_left_in,R.anim.push_left_out);
+        ((Activity) context).overridePendingTransition(R.anim.push_left_in, R.anim.push_left_out);
     }
 
 
-    public static void startActivityForResult(Activity context,Intent intent,int requestCode){
-        context.startActivityForResult(intent,requestCode);
-        context.overridePendingTransition(R.anim.push_left_in,R.anim.push_left_out);
+    public static void startActivityForResult(Activity context, Intent intent, int requestCode) {
+        context.startActivityForResult(intent, requestCode);
+        context.overridePendingTransition(R.anim.push_left_in, R.anim.push_left_out);
     }
 
-    public static void gotoLogin(Activity context){
+    public static void gotoLogin(Activity context) {
         startActivity(context, LoginActivity.class);
     }
 
-    public static void gotoRegister(Activity context){
+    public static void gotoRegister(Activity context) {
         startActivity(context, RegisterActivity.class);
     }
 
-    public static void gotoSettings(Activity context){
+    public static void gotoSettings(Activity context) {
         startActivity(context, SettingsActivity.class);
     }
 
-    public static void gotoUserProfile(Activity context){
+    public static void gotoUserProfile(Activity context) {
         startActivity(context, UserProfileActivity.class);
     }
-    public static void gotoAddFirent(Activity context){
+
+    public static void gotoAddFirend(Activity context) {
         startActivity(context, AddContactActivity.class);
+    }
+
+    public static void gotoFriendProfile(Activity context, User user) {
+        Intent intent = new Intent();
+        intent.setClass(context, FriendProfileActivity.class);
+        intent.putExtra(I.User.USER_NAME, user);
+        startActivity(context, intent);
     }
 }
 
